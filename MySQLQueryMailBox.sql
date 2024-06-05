@@ -1,4 +1,5 @@
-CREATE DATABASE mbox;
+DROP DATABASE IF EXISTS mbox;
+CREATE DATABASE IF NOT EXISTS mbox;
 
 USE mbox;
 
@@ -14,7 +15,8 @@ CREATE TABLE Account
     IdDirectoryAddress INT NOT NULL,
     FirstName NVARCHAR(100),
     LastName NVARCHAR(100),
-    DateOfRegistration DATE
+    DateOfRegistration DATE,
+    Password NVARCHAR(30)
 );
 
 CREATE TABLE Mail
