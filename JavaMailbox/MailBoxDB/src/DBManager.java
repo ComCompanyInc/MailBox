@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Arrays;
 
 public class DBManager {
 
@@ -17,19 +18,16 @@ public class DBManager {
             //Start connect
             System.out.println("We`re connected!");
 
-            //InsertDirectorySenderTable(statement, "DirectoryAddress", "MailAddress", "com.company.inc@gmail.com");
-            //InsertAccountTable(statement,"account",new String[]{"FirstName", "LastName"}, new String[]{"KKK", "PPP"});
 
-
+            /*
             RegistrationStarter(statement,
                     "DirectoryAddress",
                     "MailAddress",
-                    "com.company.inc@gmail.com", //data1
+                    "com.company.incii@gmail.com", //data1
                     "Account",
                     new String[]{"FirstName", "LastName", "DateOfRegistration", "Password", "IdDirectoryAddress"},
-                    new String[]{"name1", "name2", "2004-04-04", "123"} //data2
+                    new String[]{"name1", "name2", "2004-04-04", "12333"} //data2
                     );
-
 
             SendMessage(statement,
                     "DirectoryAddress",
@@ -39,6 +37,11 @@ public class DBManager {
                     "com.company.inc@gmail.com",
                     "com.company.inc@gmail.com"
                     );
+        */
+
+            //Authorization(statement,"com.company.inc@gmail.com", "123");
+
+            SelectionPeople(statement, "co");
         }
         catch(SQLException e)
         {
@@ -79,9 +82,7 @@ public class DBManager {
 
         for(int i = 0; i < data.length; i++)
         {
-            //if(i != data.length -1) {
                 query += "'" + data[i] + "',";
-            //}
         }
 
         for(int i = 0; i < idOther.length; i++)
@@ -113,14 +114,15 @@ public class DBManager {
         InsertDirectorySenderTable(statement, NameDir, attributeDir, dataDir);
 
         //create the account
-        ResultSet idAccountAddress = statement.executeQuery("SELECT Id FROM "+NameDir+" WHERE MailAddress = '" + address+"';");
-
-        int[] idOther = new int[0];
-        while(idAccountAddress.next()) // bruteforce the data for known Id
-        {
-            idOther = new int[]{(idAccountAddress.getInt("Id"))};
-            System.out.println(idOther[0]);
-        }
+        int[] idOther = new int[]
+                {
+                        SearchInt(statement,
+                                NameDir,
+                                "Id",
+                                "MailAddress",
+                                address,
+                                "Id")
+                };
 
         InsertUniversalTable(statement, NameOfTable, attributes, data, idOther);
     }
@@ -136,23 +138,105 @@ public class DBManager {
     {
         int[] idOther = new int[2];
 
+        idOther[0] =
+                SearchInt(statement,
+                        NameDir,
+                        "Id",
+                        "MailAddress",
+                        senderAddress,
+                        "Id");
 
-        ResultSet idAccountAddress = statement.executeQuery("SELECT Id FROM "+NameDir+" WHERE MailAddress = '" + senderAddress+"';");
-
-        while(idAccountAddress.next()) // bruteforce the data for known Id
-        {
-            idOther[0] = idAccountAddress.getInt("Id");
-            System.out.println(idOther[0]);
-        }
-
-        ResultSet idReciverAccountAddress = statement.executeQuery("SELECT Id FROM "+NameDir+" WHERE MailAddress = '" + receiverAddress+"';");
-
-        while(idReciverAccountAddress.next()) // bruteforce the data for known Id
-        {
-            idOther[1] = idReciverAccountAddress.getInt("Id");
-            System.out.println(idOther[1]);
-        }
+        idOther[1] =
+                SearchInt(statement,
+                        NameDir,
+                        "Id",
+                        "MailAddress",
+                        receiverAddress,
+                        "Id");
 
         InsertUniversalTable(statement, NameOfTable, attributes, data, idOther);
+    }
+
+    public boolean Authorization(Statement statement, String address, String password) throws SQLException
+    {
+        int idVerification =
+                        SearchInt(statement,
+                                "DirectoryAddress",
+                                "Id",
+                                "MailAddress",
+                                address,
+                                "Id");
+
+        String verificationPassword =
+                SearchStr(statement,
+                        "Account",
+                        "Password",
+                        "IdDirectoryAddress",
+                        String.valueOf(idVerification),
+                        "Password");
+
+        if(password.equals(verificationPassword) == true)
+        {
+            System.out.println("Entry block successfully verified!");
+            return true;
+        }
+        else if(password.equals(verificationPassword) != true)
+        {
+            System.out.println("Entry block not verified!");
+            return false;
+        }
+        return false;
+    }
+
+    public String[] SelectionPeople (Statement statement, String requestAddress) throws SQLException {
+        String[] people = new String[1000];
+
+        ResultSet resultSet = statement.executeQuery("SELECT MailAddress FROM DirectoryAddress WHERE MailAddress LIKE '%"+requestAddress+"%' ORDER BY MailAddress;");
+        int j = 0;
+        while(resultSet.next())
+        {
+            people[j] = resultSet.getString("MailAddress");
+            j++;
+        }
+
+        for(int i = 0; i < people.length; i++)
+        {
+            if(people[i] == null)
+            {
+                break;
+            }
+
+            System.out.println(people[i]);
+        }
+
+        return people;
+    }
+
+
+    // methods for search
+    public String SearchStr(Statement statement, String NameOfTable, String Select, String ColumnWhere ,String result, String columnLabel) throws SQLException {
+        String res = "";
+
+        ResultSet resultSet = statement.executeQuery("SELECT "+Select+" FROM "+NameOfTable+" WHERE "+ColumnWhere+" = '" + result +"';");
+        while(resultSet.next()) // bruteforce the data for known Id
+        {
+            res = resultSet.getString(columnLabel);
+            System.out.println(res);
+        }
+
+        return res;
+    }
+
+    public int SearchInt(Statement statement, String NameOfTable, String Select, String ColumnWhere ,String result, String columnLabel) throws SQLException {
+        int res = 0;
+
+        ResultSet resultSet = statement.executeQuery("SELECT "+Select+" FROM "+NameOfTable+" WHERE "+ColumnWhere+" = '" + result +"';");
+        while(resultSet.next()) // bruteforce the data for known Id
+        {
+            res = resultSet.getInt(columnLabel);
+            System.out.println(res);
+        }
+
+        return res;
     }
 }
