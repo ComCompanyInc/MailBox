@@ -18,34 +18,43 @@ public class DBManager {
             //Start connect
             System.out.println("We`re connected!");
 
-
             /*
-            RegistrationStarter(statement,
-                    "DirectoryAddress",
-                    "MailAddress",
-                    "com.company.incii@gmail.com", //data1
-                    "Account",
-                    new String[]{"FirstName", "LastName", "DateOfRegistration", "Password", "IdDirectoryAddress"},
-                    new String[]{"name1", "name2", "2004-04-04", "12333"} //data2
-                    );
+            for(int i = 0; i < 1500; i++) {
+                RegistrationStarter(statement,
+                        "DirectoryAddress",
+                        "MailAddress",
+                        "com.company.incii@gmail.com", //data1
+                        "Account",
+                        new String[]{"FirstName", "LastName", "DateOfRegistration", "Password", "IdDirectoryAddress"},
+                        new String[]{"name1", "name2", "2004-04-04", "12333"} //data2
+                );
 
-            SendMessage(statement,
-                    "DirectoryAddress",
-                    "Mail",
-                    new String[]{"DescriptionMail", "DateOfSend", "IdDirectoryAddressOut", "IdDirectoryAddressIn"},
-                    new String[]{"Привет, давно не виделись!", "2015-11-01"},
-                    "com.company.inc@gmail.com",
-                    "com.company.inc@gmail.com"
-                    );
-        */
+                SendMessage(statement,
+                        "DirectoryAddress",
+                        "Mail",
+                        new String[]{"DescriptionMail", "DateOfSend", "IdDirectoryAddressOut", "IdDirectoryAddressIn"},
+                        new String[]{"Привет, давно не виделись!", "2015-11-01"},
+                        "com.company.inc@gmail.com",
+                        "com.company.inc@gmail.com"
+                );
+            }
+             */
 
             //Authorization(statement,"com.company.inc@gmail.com", "123");
 
-            SelectionPeople(statement, "co");
+            //SelectionPeople(statement, "co");
+
+            //ShowAllMessages(statement, "com.company.inc@gmail.com");
+
+            String[] allMess = ShowAllMessages(statement, "com.company.inc@gmail.com");
+            for(int i = 0; i < allMess.length; i++) {
+                 ShowMessageDescription(statement, "com.company.inc@gmail.com_" + i);//allMess[i]);
+            }
+
         }
         catch(SQLException e)
         {
-            System.out.println("Server was unreachable");
+            System.out.println("Server was unreachable: "+e.getMessage());
         }
     }
 
@@ -212,6 +221,94 @@ public class DBManager {
         return people;
     }
 
+    public String[] ShowAllMessages(Statement statement, String addressOut) throws SQLException
+    {
+        String[] allMessages = new String[1000];
+        String[] numberMessage = new String[1000];
+
+        //ResultSet idAddressIn = statement.executeQuery("SELECT Id FROM DirectoryAddress WHERE MailAddress = '"+address+"';");
+
+        int idSender = SearchInt(statement,
+                "DirectoryAddress",
+                "Id",
+                "MailAddress",
+                addressOut,
+                "Id");
+
+        int[] idReciver = new int[1000];
+
+        ResultSet resultSet = statement.executeQuery("SELECT IdDirectoryAddressIn FROM Mail WHERE IdDirectoryAddressOut = '"+String.valueOf(idSender)+"' ORDER BY id DESC LIMIT 1000;");
+        int j = 0;
+        while(resultSet.next())
+        {
+            idReciver[j] = resultSet.getInt("IdDirectoryAddressIn");
+            j++;
+        }
+
+        for(int i = 0; i < idReciver.length; i++) {
+            resultSet = statement.executeQuery("SELECT MailAddress FROM DirectoryAddress WHERE Id = '" + String.valueOf(idReciver[i]) + "';");
+            int k = 0;
+            while(resultSet.next())
+            {
+                allMessages[k] = resultSet.getString("MailAddress");
+                k++;
+            }
+
+            resultSet = statement.executeQuery("SELECT Id FROM Mail WHERE IdDirectoryAddressOut = '" + String.valueOf(idSender) + "' ORDER BY id DESC LIMIT 1000;");
+
+            int l = 0;
+
+            while(resultSet.next())
+            {
+                numberMessage[l] = "_"+ resultSet.getString("Id");
+                l++;
+            }
+        }
+
+
+
+        for(int i = 0; i < allMessages.length; i++)
+        {
+            if(allMessages[i] == null)
+            {
+                break;
+            }
+            allMessages[i] = allMessages[i]+numberMessage[i];
+            System.out.println("id other user in your messages: "+allMessages[i]);
+        }
+
+        return allMessages;
+    }
+
+    public String[] ShowMessageDescription(Statement statement, String addressInWithNumber) throws SQLException {
+        if(addressInWithNumber != null) {
+            String[] result = new String[2];
+            String[] addressPath = addressInWithNumber.split("_");
+
+            //ResultSet resultSet = statement.executeQuery("SELECT DescriptionMail FROM Mail WHERE Id = '" + addressPath[1] + "';");
+            result[0] = SearchStr(statement,
+                    "Mail",
+                    "DescriptionMail",
+                    "Id",
+                    addressPath[1],
+                    "DescriptionMail");
+
+            result[1] = SearchStr(statement,
+                    "Mail",
+                    "DateOfSend",
+                    "Id",
+                    addressPath[1],
+                    "DateOfSend");
+
+            System.out.println("Description: " + result[0] + " Date: " + result[1]);
+
+            return result;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     // methods for search
     public String SearchStr(Statement statement, String NameOfTable, String Select, String ColumnWhere ,String result, String columnLabel) throws SQLException {
