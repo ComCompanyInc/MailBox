@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class DBManager {
 
-    public void Start() throws ClassNotFoundException, SQLException
+    public void Start(int command, String args[]) throws ClassNotFoundException, SQLException
     {
         String userName = "root";
         String password = "root";
@@ -20,14 +20,14 @@ public class DBManager {
             System.out.println("We`re connected!");
 
             /*
-            for(int i = 0; i < 1500; i++) {
+            //for(int i = 0; i < 1500; i++) {
                 RegistrationStarter(statement,
                         "DirectoryAddress",
                         "MailAddress",
                         "com.company.inc@gmail.com", //data1
                         "Account",
                         new String[]{"FirstName", "LastName", "DateOfRegistration", "Password", "IdDirectoryAddress"},
-                        new String[]{"name1", "name2", "2004-04-04", "12333"} //data2
+                        new String[]{"name1", "name2", "2004-04-04", "123"} //data2
                 );
 
                 SendMessage(statement,
@@ -38,8 +38,9 @@ public class DBManager {
                         "com.company.inc@gmail.com",
                         "com.company.inc@gmail.com"
                 );
-            }
+            //}
             */
+
 
             //Authorization(statement,"com.company.inc@gmail.com", "123");
 
@@ -60,6 +61,50 @@ public class DBManager {
                 System.out.println("data["+i+"] = "+accountData[i]);
             }
             */
+
+            switch(command)
+            {
+                case 0:
+                        Authorization(statement, args[0], args[1]);
+                    break;
+
+                case 1:
+                        String[] allMess = ShowAllMessages(statement, args[0]);
+                        for(int i = 0; i < allMess.length; i++) {
+                            if(allMess[i] == null)
+                            {
+                                break;
+                            }
+
+                            System.out.println("Server: "+allMess[i]);
+                        }
+                    break;
+
+                case 2:
+                        SelectionPeople(statement, args[0]);
+                    break;
+
+                case 3:
+                        ShowAccountInfo(statement, args[0]);
+                    break;
+
+                case 4:
+                    SendMessage(statement,
+                            "DirectoryAddress",
+                            "Mail",
+                            new String[]{"DescriptionMail", "DateOfSend", "IdDirectoryAddressOut", "IdDirectoryAddressIn"},
+                            new String[]{args[0], args[1]},
+                            args[2],
+                            args[3]
+                    );
+                    break;
+
+                case 5:
+                        ShowMessageDescription(statement,
+                                args[0]
+                        );
+                    break;
+            }
         }
         catch(SQLException e)
         {
