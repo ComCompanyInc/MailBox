@@ -1,3 +1,4 @@
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public class DBManager {
                 RegistrationStarter(statement,
                         "DirectoryAddress",
                         "MailAddress",
-                        "com.company.incii@gmail.com", //data1
+                        "com.company.inc@gmail.com", //data1
                         "Account",
                         new String[]{"FirstName", "LastName", "DateOfRegistration", "Password", "IdDirectoryAddress"},
                         new String[]{"name1", "name2", "2004-04-04", "12333"} //data2
@@ -38,7 +39,7 @@ public class DBManager {
                         "com.company.inc@gmail.com"
                 );
             }
-             */
+            */
 
             //Authorization(statement,"com.company.inc@gmail.com", "123");
 
@@ -46,11 +47,19 @@ public class DBManager {
 
             //ShowAllMessages(statement, "com.company.inc@gmail.com");
 
+            /*
             String[] allMess = ShowAllMessages(statement, "com.company.inc@gmail.com");
             for(int i = 0; i < allMess.length; i++) {
                  ShowMessageDescription(statement, "com.company.inc@gmail.com_" + i);//allMess[i]);
             }
+            */
 
+            /*
+            String[] accountData = ShowAccountInfo(statement, "com.company.inc@gmail.com");
+            for(int i = 0; i < accountData.length; i++) {
+                System.out.println("data["+i+"] = "+accountData[i]);
+            }
+            */
         }
         catch(SQLException e)
         {
@@ -308,6 +317,53 @@ public class DBManager {
         {
             return null;
         }
+    }
+
+    public String[] ShowAccountInfo(Statement statement, String addressOther) throws SQLException {
+        String[] result = new String[3];
+
+        int idOtherAccount = SearchInt(statement,
+                "DirectoryAddress",
+                "Id",
+                "MailAddress",
+                addressOther.toString(),
+                "Id");
+
+        System.out.println(idOtherAccount+" *");
+
+        result[0] = SearchStr(statement,
+                "Account",
+                "FirstName",
+                "IdDirectoryAddress",
+                String.valueOf(idOtherAccount),
+                "FirstName");
+
+        result[1] = SearchStr(statement,
+                "Account",
+                "LastName",
+                "IdDirectoryAddress",
+                String.valueOf(idOtherAccount),
+                "LastName");
+
+        result[2] = SearchStr(statement,
+                "Account",
+                "DateOfRegistration",
+                "IdDirectoryAddress",
+                String.valueOf(idOtherAccount),
+                "DateOfRegistration");
+
+        /*
+        for(int i = 0; i < result.length; i++)
+        {
+            if(result[i] == null)
+            {
+                break;
+            }
+
+            System.out.println("Account data: "+result[i]);
+        }
+*/
+        return result;
     }
 
     // methods for search
