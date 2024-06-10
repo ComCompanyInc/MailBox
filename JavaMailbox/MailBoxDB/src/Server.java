@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class Server {
     DBManager dbManager = new DBManager();
+    PrintWriter writer;
 
     public void StartServer() throws IOException, SQLException, ClassNotFoundException {
         while(true) {
@@ -18,7 +19,7 @@ public class Server {
                  Socket socket = serverSocket.accept();
                  Scanner scanner = new Scanner(socket.getInputStream())) //input data for server out client)
             {
-                PrintWriter writer = new PrintWriter(socket.getOutputStream()); // output data for server in client
+                writer = new PrintWriter(socket.getOutputStream()); // output data for server in client
 
                 //writer.println("Hello World");
                 //while(scanner.hasNextLine())
@@ -27,13 +28,16 @@ public class Server {
                 System.out.println("Client: " + clientRequest);
                 //}
 
-                RequestProcessing(clientRequest);
+                writer.println(RequestProcessing(clientRequest));
+                writer.flush();
             }
         }
     }
 
-    public void RequestProcessing(String clientRequest) throws SQLException, ClassNotFoundException {
+    public String RequestProcessing(String clientRequest) throws SQLException, ClassNotFoundException {
         String[] request = clientRequest.split(">>");
+
+        String res = "";
 
         for (int i = 0; i < request.length; i++) {
             System.out.println("request["+i+"] = "+request[i]);
@@ -42,16 +46,16 @@ public class Server {
         //ENTERSYS>>com.company.inc@gmail.com>>123
         if(request[0].equals("ENTERSYS")) // 0
         {
-            dbManager.Start(0, new String[]{
+            res = dbManager.Start(0, new String[]{
                     request[1], //login
-                    request[2] //password
+                    request[2], //password
             });
         }
 
         //SHOWMESS>>com.company.inc@gmail.com
         if(request[0].equals("SHOWMESS")) // 1
         {
-            dbManager.Start(1, new String[]{
+            res = dbManager.Start(1, new String[]{
                     request[1] //out adress
             });
         }
@@ -59,7 +63,7 @@ public class Server {
         //SEARCHPEOPLE>>co
         if(request[0].equals("SEARCHPEOPLE")) // 2
         {
-            dbManager.Start(2, new String[]{
+            res = dbManager.Start(2, new String[]{
                     request[1] // reciver address
             });
         }
@@ -67,7 +71,7 @@ public class Server {
         //SHOWACCOUNT>>com.company.inc@gmail.com
         if(request[0].equals("SHOWACCOUNT")) // 3
         {
-            dbManager.Start(3, new String[]{
+            res = dbManager.Start(3, new String[]{
                     request[1] // address for watching
             });
         }
@@ -75,7 +79,7 @@ public class Server {
         //SENDMESS>>its my first mail for myself!>>2013-05-09>>com.company.inc@gmail.com_com.company.inc@gmail.com
         if(request[0].equals("SENDMESS")) // 4
         {
-            dbManager.Start(4, new String[]{
+            res = dbManager.Start(4, new String[]{
                     request[1], //description message
                     request[2], //date of send
                     request[3], //sender address
@@ -86,9 +90,23 @@ public class Server {
         //OPENMESS>>com.company.inc@gmail.com_1
         if(request[0].equals("OPENMESS")) // 5
         {
-            dbManager.Start(5, new String[]{
+            res = dbManager.Start(5, new String[]{
                     request[1], //address with number
             });
         }
+
+        //REG>>india.colorado.edu@gmail.com>>myName>>mySurname>>2020-06-02>>pass
+        if(request[0].equals("REG")) // 6
+        {
+            res = dbManager.Start(6, new String[]{
+                    request[1], //address
+                    request[2], //first name
+                    request[3], //last name
+                    request[4], //date of registration
+                    request[5], //password
+            });
+        }
+
+        return res;
     }
 }

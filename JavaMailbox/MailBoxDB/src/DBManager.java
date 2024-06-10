@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class DBManager {
 
-    public void Start(int command, String args[]) throws ClassNotFoundException, SQLException
+    public String Start(int command, String args[]) throws ClassNotFoundException, SQLException
     {
         String userName = "root";
         String password = "root";
@@ -61,32 +61,31 @@ public class DBManager {
                 System.out.println("data["+i+"] = "+accountData[i]);
             }
             */
+            String res = "";
 
             switch(command)
             {
                 case 0:
-                        Authorization(statement, args[0], args[1]);
-                    break;
+                       return String.valueOf(Authorization(statement, args[0], args[1]));
+                    //break;
 
                 case 1:
-                        String[] allMess = ShowAllMessages(statement, args[0]);
-                        for(int i = 0; i < allMess.length; i++) {
-                            if(allMess[i] == null)
-                            {
-                                break;
-                            }
+                        res = ShowAllMessages(statement, args[0]);
 
-                            System.out.println("Server: "+allMess[i]);
-                        }
-                    break;
+                        return res;
+                    //break;
 
                 case 2:
-                        SelectionPeople(statement, args[0]);
-                    break;
+                        res = SelectionPeople(statement, args[0]);
+
+                        return res;
+                    //break;
 
                 case 3:
-                        ShowAccountInfo(statement, args[0]);
-                    break;
+                        res = ShowAccountInfo(statement, args[0]);
+
+                        return res;
+                    //break;
 
                 case 4:
                     SendMessage(statement,
@@ -97,19 +96,51 @@ public class DBManager {
                             args[2],
                             args[3]
                     );
-                    break;
+
+                    return "200";
+                    //break;
 
                 case 5:
-                        ShowMessageDescription(statement,
+                        res = ShowMessageDescription(statement,
                                 args[0]
                         );
-                    break;
+
+                        return res;
+                    //break;
+
+                case 6:
+                    RegistrationStarter(statement,
+                            "DirectoryAddress",
+                            "MailAddress",
+                            args[0], //data1
+                            "Account",
+                            new String[]{"FirstName", "LastName", "DateOfRegistration", "Password", "IdDirectoryAddress"},
+                            new String[]{args[1], args[2], args[3], args[4]} //data2
+                    );
+
+                    SendMessage(statement,
+                            "DirectoryAddress",
+                            "Mail",
+                            new String[]{"DescriptionMail", "DateOfSend", "IdDirectoryAddressOut", "IdDirectoryAddressIn"},
+                            new String[]{"Привет, давно не виделись!", "2015-11-01"},
+                            "com.company.inc@gmail.com",
+                            "com.company.inc@gmail.com"
+                    );
+
+                    return "200";
+                    //break;
+
+                default:
+                        return "-100";
+                    //break;
             }
         }
         catch(SQLException e)
         {
             System.out.println("Server was unreachable: "+e.getMessage());
         }
+
+        return "0";
     }
 
     public void InsertDirectorySenderTable(Statement statement,
@@ -251,8 +282,9 @@ public class DBManager {
         return false;
     }
 
-    public String[] SelectionPeople (Statement statement, String requestAddress) throws SQLException {
+    public String SelectionPeople (Statement statement, String requestAddress) throws SQLException {
         String[] people = new String[1000];
+        String peopleRes = "";
 
         ResultSet resultSet = statement.executeQuery("SELECT MailAddress FROM DirectoryAddress WHERE MailAddress LIKE '%"+requestAddress+"%' ORDER BY MailAddress;");
         int j = 0;
@@ -269,16 +301,18 @@ public class DBManager {
                 break;
             }
 
+            peopleRes = peopleRes+people[i]+"<<";
             System.out.println(people[i]);
         }
 
-        return people;
+        return peopleRes;
     }
 
-    public String[] ShowAllMessages(Statement statement, String addressOut) throws SQLException
+    public String ShowAllMessages(Statement statement, String addressOut) throws SQLException
     {
         String[] allMessages = new String[1000];
         String[] numberMessage = new String[1000];
+        String resAllMessages = "";
 
         //ResultSet idAddressIn = statement.executeQuery("SELECT Id FROM DirectoryAddress WHERE MailAddress = '"+address+"';");
 
@@ -327,14 +361,32 @@ public class DBManager {
             {
                 break;
             }
-            allMessages[i] = allMessages[i]+numberMessage[i];
-            System.out.println("id other user in your messages: "+allMessages[i]);
+            else
+            {
+                for(int n = 0; n < numberMessage.length; n++) {
+                    if(numberMessage[n] == null)
+                    {
+                        break;
+                    }
+                    else {
+                        resAllMessages = resAllMessages + allMessages[i] + numberMessage[n] + "<<";
+                        //resAllMessages = resAllMessages + allMessages[i]+"<<";
+                        System.out.println("id other user in your messages: " + allMessages[i] + numberMessage[n]);
+
+                        //System.out.println("_______0|1|2|3|");
+                        //System.out.println(allMessages[0]);
+                        //System.out.println(allMessages[1]);
+                        //System.out.println(allMessages[2]);
+                        //System.out.println(allMessages[3]);
+                    }
+                }
+            }
         }
 
-        return allMessages;
+        return resAllMessages;
     }
 
-    public String[] ShowMessageDescription(Statement statement, String addressInWithNumber) throws SQLException {
+    public String ShowMessageDescription(Statement statement, String addressInWithNumber) throws SQLException {
         if(addressInWithNumber != null) {
             String[] result = new String[2];
             String[] addressPath = addressInWithNumber.split("_");
@@ -354,9 +406,12 @@ public class DBManager {
                     addressPath[1],
                     "DateOfSend");
 
-            System.out.println("Description: " + result[0] + " Date: " + result[1]);
+            for(int i = 0; i < result.length; i++)
+            {
+                System.out.println("Description: " + result[i] + " Date: " + result[1]);
+            }
 
-            return result;
+            return result[0]+"<<"+result[1];
         }
         else
         {
@@ -364,7 +419,7 @@ public class DBManager {
         }
     }
 
-    public String[] ShowAccountInfo(Statement statement, String addressOther) throws SQLException {
+    public String ShowAccountInfo(Statement statement, String addressOther) throws SQLException {
         String[] result = new String[3];
 
         int idOtherAccount = SearchInt(statement,
@@ -408,7 +463,7 @@ public class DBManager {
             System.out.println("Account data: "+result[i]);
         }
 */
-        return result;
+        return result[0] + "<<" + result[1] + "<<" + result[2] + "<<";
     }
 
     // methods for search
