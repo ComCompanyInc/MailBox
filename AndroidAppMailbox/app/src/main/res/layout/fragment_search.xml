@@ -22,18 +22,28 @@
                 android:layout_height="55dp"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="ENTER ADDRESS"
                 android:inputType="text"
-                android:text="Name" />
+                />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:width="180dp"
                 android:foreground="@drawable/baseline_arrow_right_alt_24"
+                android:onClick="searchButtonClick"
                 android:text="." />
 
         </LinearLayout>
+
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/surchList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp" />
+
 </FrameLayout>
