@@ -17,12 +17,13 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/editTextTextEmailAddress2"
+                android:id="@+id/searchLine"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textEmailAddress" />
+                android:inputType="text"
+                android:text="Name" />
 
             <Button
                 android:id="@+id/button"
@@ -32,6 +33,7 @@
                 android:width="180dp"
                 android:foreground="@drawable/baseline_arrow_right_alt_24"
                 android:text="." />
+
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
