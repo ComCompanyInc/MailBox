@@ -94,7 +94,14 @@ TextView address, name, surname, dateOfReg;
 
     public void searchButtonClick(View view)
     {
+        //Intent intent = new Intent(this, SearchFragment.class);
+        //intent.putExtra("thisUserAddress", address.toString());
+        //startActivity(intent);
+        Bundle bundle = new Bundle();
+        bundle.putString("thisUserAddress", address.getText().toString());
+
         SearchFragment searchFragment = new SearchFragment();
+        searchFragment.setArguments(bundle);
         setNewFragment(searchFragment);
     }
 

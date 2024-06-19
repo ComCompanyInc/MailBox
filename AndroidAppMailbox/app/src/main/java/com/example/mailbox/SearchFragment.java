@@ -1,5 +1,6 @@
 package com.example.mailbox;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +21,11 @@ import android.widget.TextView;
 public class SearchFragment extends Fragment {
     EditText searchLine;
     Button searchButton;
+    String[] res;
     ListView surchList;
     ArrayAdapter<String> adapter;
+
+    String addressSender;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +42,21 @@ public class SearchFragment extends Fragment {
         searchLine = view.findViewById(R.id.searchLine);
 
         surchList = view.findViewById(R.id.surchList);
+
+        Bundle bundle = getArguments();
+        addressSender = bundle.getString("thisUserAddress");//requireArguments().getString("thisUserAddress");
+
+        surchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) { //position - it position of clicked item in ListView component
+                Intent intent = new Intent(getContext(), AccountViewer.class);
+                intent.putExtra("position", position);
+                intent.putExtra("address", res[position]);
+                intent.putExtra("thisUserAddress", addressSender);
+                startActivity(intent);
+            }
+        });
+
 
         searchButton = view.findViewById(R.id.searchButton);
 
@@ -65,7 +85,7 @@ public class SearchFragment extends Fragment {
             }
         }
 
-        String[] res = answer.split("<<");
+        res = answer.split("<<");
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, res);
         surchList.setAdapter(adapter);
     }

@@ -61,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="TextView"
-                android:textSize="20dp" />
+                android:textSize="19dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/id_name_user"

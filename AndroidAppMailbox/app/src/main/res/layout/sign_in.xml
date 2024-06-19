@@ -21,6 +21,7 @@
             android:layout_marginBottom="36dp"
             android:text="SIGN IN"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="50dp" />
 
         <EditText
@@ -30,9 +31,12 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/black"
             android:ems="10"
             android:inputType="textEmailAddress"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/black" />
 
         <EditText
             android:id="@+id/id_password_input"
@@ -41,9 +45,12 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/black"
             android:ems="10"
             android:inputType="textPassword"
-            android:textAlignment="center" />
+            android:outlineAmbientShadowColor="@color/black"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/id_entry_button"

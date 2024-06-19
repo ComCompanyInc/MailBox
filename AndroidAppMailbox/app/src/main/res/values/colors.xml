@@ -10,4 +10,5 @@
 
     <color name="sign_in_background">#C5EAF1</color>
     <color name="search_back_colour">#ECF3E6</color>
+    <color name="search_line">#B3DBE3</color>
 </resources>

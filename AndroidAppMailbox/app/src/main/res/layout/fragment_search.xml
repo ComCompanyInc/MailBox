@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/search_back_colour"
+            android:background="@color/search_line"
             android:orientation="horizontal">
 
             <EditText
@@ -21,10 +21,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/black"
                 android:ems="10"
                 android:hint="ENTER ADDRESS"
                 android:inputType="text"
-                />
+                android:textColor="@color/black"
+                android:textColorHighlight="@color/black"
+                android:textColorHint="@color/black" />
 
             <Button
                 android:id="@+id/searchButton"
@@ -44,6 +47,10 @@
         android:id="@+id/surchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="55dp" />
+        android:layout_marginTop="55dp"
+        android:background="@color/search_back_colour"
+        android:outlineAmbientShadowColor="@color/black"
+        android:outlineSpotShadowColor="@color/black"
+        android:rotationX="0" />
 
 </FrameLayout>
