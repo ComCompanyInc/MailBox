@@ -62,7 +62,7 @@ public class AccountViewer extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
 
-        sendMessage(descriptionEdit.getText().toString(), currentDate ,addressSender,address);
+        sendMessage(descriptionEdit.getText().toString(), currentDate ,address, addressSender);
     }
 
     private void openAccountPage(String address)
@@ -91,9 +91,9 @@ public class AccountViewer extends AppCompatActivity {
         dateText.setText(res[2]);
     }
 
-    public void sendMessage(String messageDescription, String date, String senderAddress, String reciverAddres)
+    public void sendMessage(String messageDescription, String date, String reciverAddres, String senderAddress)
     {
-        Client client = new Client("SENDMESS>>"+messageDescription+">>"+date+">>"+senderAddress+">>"+reciverAddres);
+        Client client = new Client("SENDMESS>>"+messageDescription+">>"+date+">>"+reciverAddres+">>"+senderAddress);
         Thread thread = new Thread(client);
         thread.start();
 
