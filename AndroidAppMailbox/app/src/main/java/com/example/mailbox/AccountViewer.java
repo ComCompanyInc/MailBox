@@ -109,6 +109,8 @@ public class AccountViewer extends AppCompatActivity {
         }
 
         Toast toast = Toast.makeText(this, answer, Toast.LENGTH_SHORT);
+
         //close activity
+        finish();
     }
 }

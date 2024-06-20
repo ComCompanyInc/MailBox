@@ -107,7 +107,11 @@ TextView address, name, surname, dateOfReg;
 
     public void messageButtonClick(View view)
     {
+        Bundle bundle = new Bundle();
+        bundle.putString("thisUserAddress", address.getText().toString());
+
         MessagesFragment messagesFragment = new MessagesFragment();
+        messagesFragment.setArguments(bundle);
         setNewFragment(messagesFragment);
     }
 
