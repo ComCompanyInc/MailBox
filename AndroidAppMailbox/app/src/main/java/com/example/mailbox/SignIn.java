@@ -72,6 +72,9 @@ public class SignIn extends Activity {
             Intent intent = new Intent(SignIn.this, MainActivity.class);
             intent.putExtra("MailAddress", String.valueOf(eMailInput.getText()));
             startActivity(intent);
+
+            eMailInput.setText("");
+            passwordInput.setText("");
         }
         else
         {
