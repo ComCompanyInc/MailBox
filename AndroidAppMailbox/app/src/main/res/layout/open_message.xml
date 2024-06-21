@@ -1,77 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/search_line"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/sign_in_background"
+            android:layout_height="wrap_content"
+            android:background="@color/search_line"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/address_sender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/date_sending"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textSize="20dp" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickOpenAccountButton"
-                android:text="OPEN ACCOUNT" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="30dp"
-                android:background="@color/search_back_colour"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/sign_in_background"
                 android:orientation="vertical">
 
-                <ScrollView
+                <TextView
+                    android:id="@+id/address_sender"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textSize="20dp" />
 
-                    <LinearLayout
+                <TextView
+                    android:id="@+id/date_sending"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClickOpenAccountButton"
+                    android:text="OPEN ACCOUNT" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="545dp"
+                    android:background="@color/search_back_colour"
+                    android:orientation="vertical">
+
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:layout_height="match_parent">
 
-                        <TextView
-                            android:id="@+id/description_text"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="TextView"
-                            android:textAlignment="center"
-                            android:textSize="25dp" />
-                    </LinearLayout>
-                </ScrollView>
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/description_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="TextView"
+                                android:textAlignment="center"
+                                android:textSize="25dp" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
